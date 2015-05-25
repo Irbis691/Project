@@ -31,20 +31,21 @@
         <title>Place your bets!</title>
     </head>
     <body>
-    <center>
+   <div id="wrapper">
+        <div id="header"> 
+                <h1>Horse Racing</h1>
+                <p class="description">Welcome to the best totalizator for horse racing!</p>
+                <a href="index.jsp"><img src="logo1.png" alt="horse racing" width="250"></a>
+            </div> 
+            <ul id="nav">
+            <li><a href="index.jsp">Index</a></li>
+            <li><a href="registration.jsp">Registration</a></li>
+            <li> <a href="login.jsp">Login</a></li>
+            </ul>
+        <div id="fullpage">
         <h1>Place your bets!</h1>
-        <hr>
-        <table>
-            <tbody>
-                <tr>
-                    <td><a href="index.jsp">Index</a></td>
-                    <td><a href="registration.jsp">Registration</a></td>
-                    <td><a href="login.jsp">Login</a></td>
-                </tr>
-            </tbody>
-        </table>
-        <hr>
-        <table border = "1">
+        <center>
+        <table class="bets">
             <thead>
                 <tr>
                     <th>Select race</th>
@@ -69,7 +70,7 @@
                             %>
                         </select>
                         </br></br>
-                        <input type="submit" value="Choose">
+                        <input type="submit" value="Choose" class="small_button"/>
                         </form>
                     </td>                    
                     <form method="POST" action="./Controller" />
@@ -97,14 +98,15 @@
                     <td align = "center">
                         <input type="text" name="betSize">
                         </br></br>
-                    <input type="submit" value="Lose money)">
+                        <input type="submit" value="Lose money)" class="small_button">
                     </td>
                     </form>
                 </tr>
             </tbody>
         </table>
-        <h3>My bets</h3>
-        <table border = "1">
+                        
+        <h2>My bets</h2>
+        <table class="races">
             <thead>
                 <tr>
                     <th>Bet id</th>
@@ -129,8 +131,8 @@
                     %>
                 </tbody>
         </table>
-        <h3>Update/delete bets</h3>
-        <table border = "1">
+        <h2>Update/delete bets</h2>
+        <table class="bets">
             <thead>
                 <tr>
                     <th>Update</th>
@@ -141,30 +143,29 @@
                         <td align = "center">
                             <form method="POST" action="./Controller" />
                             <input type = "hidden" name = "command" value = "updateBetSize" />
-                            Input bet id
-                            </br>
-                            <input type="text" name="betId">
-                            </br>
-                            Input new bet size
-                            </br>
-                            <input type="text" name="betSize">
+                            <p class="small_label">Input bet id</p>                            
+                            <input type="text" name="betId"/>                            
+                            <p class="small_label">Input new bet size</p>                        
+                            <input type="text" name="betSize"/>
                             </br></br>
-                            <input type="submit" value="Lose money)">
+                            <input type="submit" value="Lose money)" class="small_button">
                             </form>
                         </td>
                         <td align = "center">
                             <form method="POST" action="./Controller" />
                             <input type = "hidden" name = "command" value = "deleteBet" />
-                            Input bet id
+                            <p class="small_label">Input bet id</p>
                             </br>
-                            <input type="text" name="betId">
+                            <input type="text" name="betId"/>
                             </br></br>
-                            <input type="submit" value="Delete">
+                            <input type="submit" value="Delete" class="small_button"/>
                             </form> 
                         </td>
                     </tr>
                 </tbody>
         </table>
-    </center>
+        </center>
+        </div>
+   </div>
 </body>
 </html>

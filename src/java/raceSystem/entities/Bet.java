@@ -11,16 +11,16 @@ package raceSystem.entities;
  */
 public class Bet {
 
-    private int betId;
-    private int userId;
-    private int raceId;
+    private long betId;
+    private String userId;
+    private String raceId;
     private String horseName;
     private double betSize;
 
     public Bet() {
     }
     
-    public Bet(int betId, int userId, int raceId, String horseName, double betSize) {
+    public Bet(long betId, String userId, String raceId, String horseName, double betSize) {
         this.betId = betId;
         this.raceId = raceId;
         this.userId = userId;
@@ -28,14 +28,14 @@ public class Bet {
         this.betSize = betSize;
     }
     
-    public Bet(int userId, int raceId, String horseName, double betSize) {        
+    public Bet(String userId, String raceId, String horseName, double betSize) {        
         this.raceId = raceId;
         this.userId = userId;
         this.horseName = horseName;
         this.betSize = betSize;
     }
 
-    public int getBetId() {
+    public long getBetId() {
         return betId;
     }
 
@@ -43,19 +43,19 @@ public class Bet {
         this.betId = betId;
     }
 
-    public int getRaceId() {
+    public String getRaceId() {
         return raceId;
     }
 
-    public void setRaceId(int raceId) {
+    public void setRaceId(String raceId) {
         this.raceId = raceId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

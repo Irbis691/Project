@@ -11,68 +11,41 @@ package raceSystem.entities;
  */
 public class HorseStatus {
 
-    private int horseStatusId;
-    private int horseId;
-    private int raceId;
-    private int horsePlace;
-    private double horseCoeff;
+    private String horseStatusId;
+    private String horseId;
+    private String raceId;
 
     public HorseStatus() {
     }
     
-    public HorseStatus(int horseStatusId, int horseId, int raceId, int horsePlace, double horseCoeff) {
+    public HorseStatus(String horseStatusId, String raceId, String horseId) {
         this.horseStatusId = horseStatusId;
         this.horseId = horseId;
         this.raceId = raceId;
-        this.horsePlace = horsePlace;
-        this.horseCoeff = horseCoeff;
-    }
-    
-    public HorseStatus(int horseId, int raceId, int horsePlace, double horseCoeff) {        
-        this.horseId = horseId;
-        this.raceId = raceId;
-        this.horsePlace = horsePlace;
-        this.horsePlace = horsePlace;
     }
 
-    public int getHorseStatusId() {
+    public String getHorseStatusId() {
         return horseStatusId;
     }
 
-    public void setHorseStatusId(int horseStatusId) {
+    public void setHorseStatusId(String horseStatusId) {
         this.horseStatusId = horseStatusId;
     }
     
-    public int getHorseId() {
+    public String getHorseId() {
         return horseId;
     }
 
-    public void setHorseId(int horseId) {
+    public void setHorseId(String horseId) {
         this.horseId = horseId;
     }
 
-    public int getRaceId() {
+    public String getRaceId() {
         return raceId;
     }
 
-    public void setRaceId(int raceId) {
+    public void setRaceId(String raceId) {
         this.raceId = raceId;
-    }
-
-    public int getHorsePlace() {
-        return horsePlace;
-    }
-
-    public void setHorsePlace(int horsePlace) {
-        this.horsePlace = horsePlace;
-    }
-
-    public double getHorseCoeff() {
-        return horseCoeff;
-    }
-
-    public void setHorseCoeff(double horseCoeff) {
-        this.horseCoeff = horseCoeff;
     }
 
 }

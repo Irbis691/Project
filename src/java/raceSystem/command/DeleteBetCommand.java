@@ -20,7 +20,7 @@ public class DeleteBetCommand implements ActionCommand {
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
-        int betId = Integer.parseInt(request.getParameter(PARAM_NAME_BETID));
+        long betId = Long.parseLong(request.getParameter(PARAM_NAME_BETID));
         DeleteBetLogic.deleteBetSize(betId);
         return page;
     }

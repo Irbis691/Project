@@ -23,11 +23,12 @@ public class PlaceBetCommand implements ActionCommand {
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
-        int userId = Integer.parseInt(request.getParameter(PARAM_NAME_USERID));
-        String raceName = (String)request.getParameter(PARAM_NAME_RACENAME);
-        String horseName = (String)request.getParameter(PARAM_NAME_HORSE);
+        String userId = request.getParameter(PARAM_NAME_USERID);
+        String raceName = request.getParameter(PARAM_NAME_RACENAME);
+        String horseName = request.getParameter(PARAM_NAME_HORSE);
         double betSize = Double.parseDouble(request.getParameter(PARAM_NAME_BETSIZE));
-        PlaceBetLogic.palceBet(userId, raceName, horseName, betSize);
+        long betId = System.currentTimeMillis();
+        PlaceBetLogic.palceBet(betId, userId, raceName, horseName, betSize);
         return page;
     }
     

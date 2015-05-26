@@ -5,7 +5,6 @@
  */
 package raceSystem.dao.interfaces;
 
-import java.sql.Date;
 import java.util.List;
 import raceSystem.entities.Race;
 
@@ -14,20 +13,11 @@ import raceSystem.entities.Race;
  * @author Пазинич
  */
 public interface RaceDao {
-    
-    void insert(Race user);
-
-    Race find(int id);
 
     List<Race> findAll();
     
-    Date findDate(String raceName);
+    String findRaceId(String raceName);
     
-    int findRaceId(String raceName);
-    
-    String findRaceName(int raceId);
+    String findRaceName(String raceId);
 
-    void update(Race user);
-
-    void delete(String id);
 }

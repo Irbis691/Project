@@ -21,7 +21,7 @@ public class UpdateBetSizeCommand implements ActionCommand {
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
-        int betId = Integer.parseInt(request.getParameter(PARAM_NAME_BETID));
+        long betId = Long.parseLong(request.getParameter(PARAM_NAME_BETID));
         double betSize = Double.parseDouble(request.getParameter(PARAM_NAME_BETSIZE));
         UpdateBetSizeLogic.updateBetSize(betId, betSize);
         return page;

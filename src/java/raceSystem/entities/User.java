@@ -11,32 +11,29 @@ package raceSystem.entities;
  */
 public class User {
 
-    private int userId;
+    private long userId;
     private String login;
     private int passwordHash;
-    private int userType;
 
     public User() {
     }
     
-    public User(int userId, String login, int passwordHash, int userType) {
+    public User(long userId, String login, int passwordHash) {
         this.userId = userId;
         this.login = login;
         this.passwordHash = passwordHash;
-        this.userType = userType;
     }
     
-    public User(String login, int passwordHash, int userType) {        
+    public User(String login, int passwordHash) {        
         this.login = login;
         this.passwordHash = passwordHash;
-        this.userType = userType;
     }
     
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
     
@@ -54,14 +51,6 @@ public class User {
 
     public void setPasswordHash(int passwordHash) {
         this.passwordHash = passwordHash;
-    }
-    
-    public int getUserType() {
-        return userType;
-    }
-
-    public void setUserType(int userType) {
-        this.userType = userType;
     }
     
 }

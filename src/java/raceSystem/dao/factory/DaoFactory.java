@@ -20,7 +20,7 @@ import raceSystem.dao.interfaces.UserDao;
 public abstract class DaoFactory {
 
     public abstract BetDao createBetDao();
-
+    
     public abstract HorseDao createHorseDao();
 
     public abstract HorseStatusDao createHorseStatusDao();

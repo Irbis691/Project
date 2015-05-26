@@ -15,7 +15,7 @@ import raceSystem.dao.jdbcConnection.JdbcConnection;
  */
 public class DeleteBetLogic {
 
-    public static void deleteBetSize(int betId) {
+    public static void deleteBetSize(long betId) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
         daoFactory.createBetDao().delete(betId);

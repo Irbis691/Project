@@ -1,3 +1,7 @@
+<%@page import="raceSystem.resource.ConfigurationManager"%>
+<%@page import="com.hazelcast.core.HazelcastInstance"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.hazelcast.core.Hazelcast"%>
 <%@page import="raceSystem.entities.Race"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="raceSystem.dao.jdbcConnection.JdbcConnection"%>
@@ -7,6 +11,13 @@
 <html>
     <head>
         <%
+			HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+            Map<Integer, String> customers = hazelcastInstance.getMap("customers");
+            if (customers.get(1) != null) {
+                RequestDispatcher dispatcher
+                        = getServletContext().getRequestDispatcher(ConfigurationManager.getProperty("path.page.clientConsole"));
+                dispatcher.forward(request, response);
+            }
             JdbcConnection connection = JdbcConnection.getInstance();
             DaoFactory daoFactory = new RealDaoFactory(connection);
         %>

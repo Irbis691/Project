@@ -18,16 +18,14 @@ public class RegistrationCommand implements ActionCommand {
 
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String PARAM_NAME_PASSWORD = "password";
-    private static final String PARAM_NAME_TYPE = "type";
 
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String pass = request.getParameter(PARAM_NAME_PASSWORD);
-        int type = Integer.parseInt(request.getParameter(PARAM_NAME_TYPE));
         if (RegistrationLogic.checkLoginUniq(login)) {
-            RegistrationLogic.regNewUser(login, pass, type);
+            RegistrationLogic.regNewUser(System.currentTimeMillis(), login, pass);
             request.setAttribute("user", login);
             page = ConfigurationManager.getProperty("path.page.successRegPage");
         } else {

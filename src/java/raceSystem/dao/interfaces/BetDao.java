@@ -16,15 +16,11 @@ public interface BetDao {
 
     void insert(Bet user);
 
-    Bet find(int id);
-
     List<Bet> findAll();
     
-    List<Bet> findByUserId(int userId);
+    List<Bet> findByUserId(String userId);
 
-    void update(Bet user);
-    
-    void updateBetSize(int betId, double betSize);
+    void updateBetSize(long betId, double betSize);
 
-    void delete(int id);
+    void delete(long betId);
 }

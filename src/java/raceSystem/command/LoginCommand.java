@@ -5,8 +5,10 @@
  */
 package raceSystem.command;
 
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import raceSystem.logic.LoginLogic;
 import raceSystem.resource.ConfigurationManager;
 import raceSystem.resource.MessageManager;
@@ -19,36 +21,20 @@ public class LoginCommand implements ActionCommand {
 
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String PARAM_NAME_PASSWORD = "password";
-    private static final int ADMIN_TYPE = 1;
-    private static final int BOOKIE_TYPE = 2;
-    private static final int CLIENT_TYPE = 3;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page = ConfigurationManager.getProperty("path.page.clientConsole");
+        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+        Map<Integer, String> customers = hazelcastInstance.getMap("customers");
+//        if(customers.get(1) != null) {
+//            return page;
+//        }
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String pass = request.getParameter(PARAM_NAME_PASSWORD);
         if (LoginLogic.checkLogin(login)) {
             if (LoginLogic.checkPass(pass)) {
-                HttpSession session = request.getSession();
-                session.setAttribute("id" , LoginLogic.getId(login));
-                session.setAttribute("type" , LoginLogic.getType(login));
-                switch(LoginLogic.getType(login)) {
-                    case ADMIN_TYPE:
-                        page = ConfigurationManager.getProperty("path.page.adminConsole");
-                        break;
-                    case BOOKIE_TYPE:
-                        page = ConfigurationManager.getProperty("path.page.bookieConsole");
-                        break;
-                    case CLIENT_TYPE:
-                        page = ConfigurationManager.getProperty("path.page.clientConsole");
-                        break;
-                    default:
-                        request.setAttribute("errorPassMessage",
-                                MessageManager.getProperty("message.nullPage"));
-                        page = ConfigurationManager.getProperty("path.page.login");
-                        break;
-                }
+                customers.put(1, LoginLogic.getId(login));               
             } else {
                 request.setAttribute("errorPassMessage",
                         MessageManager.getProperty("message.passError"));

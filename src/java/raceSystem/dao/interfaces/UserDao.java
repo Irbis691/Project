@@ -13,22 +13,13 @@ import raceSystem.entities.User;
  * @author Пазинич
  */
 public interface UserDao {
-    
+
     void insert(User user);
 
-    User find(int id);
-
-    List<User> findAll();
-    
     List<String> findLogins();
-    
+
     List<Integer> findPass();
-    
-    int getType(String login);
-    
-    int getId(String login);
 
-    void update(User user);
+    String getId(String login);
 
-    void delete(String login);    
 }

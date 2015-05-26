@@ -15,7 +15,7 @@ import raceSystem.dao.jdbcConnection.JdbcConnection;
  */
 public class UpdateBetSizeLogic {
 
-    public static void updateBetSize(int betId, double betSize) {
+    public static void updateBetSize(long betId, double betSize) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
         daoFactory.createBetDao().updateBetSize(betId, betSize);

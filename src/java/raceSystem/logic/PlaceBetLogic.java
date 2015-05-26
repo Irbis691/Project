@@ -16,11 +16,11 @@ import raceSystem.entities.Bet;
  */
 public class PlaceBetLogic {
 
-    public static void palceBet(int userId, String raceName, String horseName, double betSize) {
+    public static void palceBet(long betId, String userId, String raceName, String horseName, double betSize) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
-        int raceId = daoFactory.createRaceDao().findRaceId(raceName);
-        Bet bet = new Bet(userId, raceId, horseName, betSize);
+        String raceId = daoFactory.createRaceDao().findRaceId(raceName);
+        Bet bet = new Bet(betId, userId, raceId, horseName, betSize);
         daoFactory.createBetDao().insert(bet);
     }
     

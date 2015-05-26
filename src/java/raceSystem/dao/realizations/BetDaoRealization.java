@@ -5,14 +5,13 @@
  */
 package raceSystem.dao.realizations;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import raceSystem.dao.interfaces.BetDao;
 import raceSystem.entities.Bet;
 import raceSystem.dao.jdbcConnection.JdbcConnection;
@@ -24,13 +23,12 @@ import raceSystem.dao.jdbcConnection.JdbcConnection;
 public class BetDaoRealization implements BetDao {
 
     private final JdbcConnection connection;
-    private final static String insertQuery = "INSERT INTO bets (userId, raceId, horseName, betSize) values (?, ?, ?, ?)";
-    private final static String findQuery = "SELECT * FROM bets where betId = ?";
-    private final static String findAllQuery = "SELECT * FROM bets";
-    private final static String findByUserIdQuery = "SELECT * FROM bets where userId = ?";   
-    private final static String updateQuery = "UPDATE bets SET userId = ?, raceId = ?, horseName = ?, betSize = ? WHERE betId = ?";
-    private final static String updateBetSizeQuery = "UPDATE bets SET betSize = ? WHERE betId = ?";    
-    private final static String deleteQuery = "DELETE FROM bets WHERE betId = ?";
+    private final static String COLLECTION_NAME = "bets";
+    private final static String BETID_FIELD = "id";
+    private final static String USERID_FIELD = "userId";
+    private final static String RACEID_FIELD = "raceId";
+    private final static String HORSENAME_FIELD = "horseName";
+    private final static String BETSIZE_FIELD = "betSize";
 
     public BetDaoRealization(JdbcConnection connection) {
         this.connection = connection;
@@ -38,183 +36,87 @@ public class BetDaoRealization implements BetDao {
 
     @Override
     public void insert(Bet bet) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
         try {
-            try {
-                statement = con.prepareStatement(insertQuery);
-                statement.setInt(1, bet.getUserId());
-                statement.setInt(2, bet.getRaceId());
-                statement.setString(3, bet.getHorseName());
-                statement.setDouble(4, bet.getBetSize());
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBObject person = new BasicDBObject(BETID_FIELD, bet.getBetId())
+                    .append(USERID_FIELD, bet.getUserId())
+                    .append(RACEID_FIELD, bet.getRaceId())
+                    .append(HORSENAME_FIELD, bet.getHorseName())
+                    .append(BETSIZE_FIELD, bet.getBetSize());
+            collection.insert(person);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-    }
-
-    @Override
-    public Bet find(int id) {
-        Bet bet = new Bet();
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(findQuery);
-                statement.setInt(1, id);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    bet.setBetId(rs.getInt(1));
-                    bet.setUserId(rs.getInt(2));
-                    bet.setRaceId(rs.getInt(3));
-                    bet.setHorseName(rs.getString(4));
-                    bet.setBetSize(rs.getDouble(5));
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return bet;
     }
 
     @Override
     public List<Bet> findAll() {
         List<Bet> bets = new ArrayList<>();
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
         try {
-            try {
-                statement = con.prepareStatement(findAllQuery);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    bets.add(new Bet(rs.getInt(1), rs.getInt(2), rs.getInt(3),
-                            rs.getString(4), rs.getDouble(5)));
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBCursor cur = collection.find();
+            while (cur.hasNext()) {
+                bets.add(new Bet(cur.next().get(USERID_FIELD).toString(),
+                        cur.curr().get(RACEID_FIELD).toString(),
+                        cur.curr().get(HORSENAME_FIELD).toString(),
+                        (Double) cur.curr().get(HORSENAME_FIELD)));
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return bets;
     }
-    
+
     @Override
-    public List<Bet> findByUserId(int userId) {
+    public List<Bet> findByUserId(String userId) {
         List<Bet> bets = new ArrayList<>();
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
         try {
-            try {
-                statement = con.prepareStatement(findByUserIdQuery);
-                statement.setInt(1, userId);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    bets.add(new Bet(rs.getInt(1), rs.getInt(2), rs.getInt(3),
-                            rs.getString(4), rs.getDouble(5)));
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBObject query = new BasicDBObject(USERID_FIELD, userId);
+            DBCursor cur = collection.find(query);
+            while (cur.hasNext()) {
+                bets.add(new Bet(Long.parseLong(cur.next().get(BETID_FIELD).toString()), 
+                        cur.curr().get(USERID_FIELD).toString(),
+                        cur.curr().get(RACEID_FIELD).toString(),
+                        cur.curr().get(HORSENAME_FIELD).toString(),
+                        (Double) cur.curr().get(BETSIZE_FIELD)));
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return bets;
     }
 
     @Override
-    public void update(Bet bet) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
+    public void updateBetSize(long betId, double betSize) {
         try {
-            try {
-                statement = con.prepareStatement(updateQuery);
-                statement.setInt(1, bet.getUserId());
-                statement.setInt(2, bet.getRaceId());
-                statement.setString(3, bet.getHorseName());
-                statement.setDouble(4, bet.getBetSize());
-                statement.setInt(5, bet.getBetId());
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    @Override
-    public void updateBetSize(int betId, double betSize) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(updateBetSizeQuery);
-                statement.setDouble(1, betSize);
-                statement.setInt(2, betId);
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            BasicDBObject updateDocument = new BasicDBObject();
+            updateDocument.append("$set", new BasicDBObject().append(BETSIZE_FIELD, betSize));
+            BasicDBObject searchQuery = new BasicDBObject().append(BETID_FIELD, betId);
+            collection.update(searchQuery, updateDocument);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
 
     @Override
-    public void delete(int id) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
+    public void delete(long betId) {
         try {
-            try {
-                statement = con.prepareStatement(deleteQuery);
-                statement.setInt(1, id);
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBObject query = new BasicDBObject(BETID_FIELD, betId);
+            DBCursor cur = collection.find(query);
+            while (cur.hasNext()) {
+                DBObject forDelete = cur.next();
+                collection.remove(forDelete);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
 }

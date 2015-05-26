@@ -5,26 +5,12 @@
  */
 package raceSystem.dao.interfaces;
 
-import java.util.List;
-import raceSystem.entities.Horse;
-
 /**
  *
  * @author Пазинич
  */
 public interface HorseDao {
-    
-    int insert(Horse user);
 
-    Horse find(int id);
+    String findName(String horseId);
 
-    List<Horse> findAll();
-    
-    String findName(int id);
-    
-    int findId(String name);
-
-    void update(Horse user);
-
-    void delete(int id);
 }

@@ -11,11 +11,11 @@ import raceSystem.dao.interfaces.HorseStatusDao;
 import raceSystem.dao.interfaces.RaceDao;
 import raceSystem.dao.interfaces.UserDao;
 import raceSystem.dao.realizations.BetDaoRealization;
-import raceSystem.dao.realizations.HorseDaoRealization;
-import raceSystem.dao.realizations.HorseStatusDaoRealization;
 import raceSystem.dao.realizations.RaceDaoRealization;
 import raceSystem.dao.realizations.UserDaoRealization;
 import raceSystem.dao.jdbcConnection.JdbcConnection;
+import raceSystem.dao.realizations.HorseDaoRealization;
+import raceSystem.dao.realizations.HorseStatusDaoRealization;
 
 /**
  *
@@ -34,7 +34,7 @@ public class RealDaoFactory extends DaoFactory{
     public BetDao createBetDao() {
         return new BetDaoRealization(connection);
     }
-
+    
     @Override
     public HorseDao createHorseDao() {
         return new HorseDaoRealization(connection);

@@ -29,10 +29,10 @@ public class RegistrationLogic {
         return true;
     }
     
-    public static void regNewUser(String enterLogin, String enterPass, int type) {
+    public static void regNewUser(long id, String enterLogin, String enterPass) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
-        User user = new User(enterLogin, enterPass.hashCode(), type);
+        User user = new User(id, enterLogin, enterPass.hashCode());
         daoFactory.createUserDao().insert(user);
     }
 }

@@ -20,12 +20,13 @@ public class LoginLogic {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
         ArrayList<String> loginList = (ArrayList<String>) daoFactory.createUserDao().findLogins();
+        daoFactory.createUserDao().findLogins();
         for (String logins : loginList) {
             if (logins.equals(enterLogin)) {
                 return true;
             }
         }
-        return false;
+        return false;        
     }
 
     public static boolean checkPass(String enterPass) {
@@ -39,14 +40,8 @@ public class LoginLogic {
         }
         return false;
     }
-    
-    public static int getType(String login) {
-        JdbcConnection connection = JdbcConnection.getInstance();
-        DaoFactory daoFactory = new RealDaoFactory(connection);
-        return daoFactory.createUserDao().getType(login);
-    }
 
-    public static int getId(String login) {
+    public static String getId(String login) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
         return daoFactory.createUserDao().getId(login);

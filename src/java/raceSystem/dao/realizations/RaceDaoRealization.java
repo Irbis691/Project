@@ -5,15 +5,15 @@
  */
 package raceSystem.dao.realizations;
 
-import java.sql.Connection;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import raceSystem.dao.interfaces.RaceDao;
 import raceSystem.entities.Race;
 import raceSystem.dao.jdbcConnection.JdbcConnection;
@@ -23,224 +23,66 @@ import raceSystem.dao.jdbcConnection.JdbcConnection;
  * @author Пазинич
  */
 public class RaceDaoRealization implements RaceDao {
-    
+
     private final JdbcConnection connection;
-    private final static String insertQuery = "INSERT INTO races (raceName, raceDateTime) values (?, ?)";
-    private final static String findQuery = "SELECT * FROM races where raceId = ?";
-    private final static String findAllQuery = "SELECT * FROM races";
-    private final static String findDate = "SELECT raceDateTime FROM races where raceName = ?";
-    private final static String findRaceIdQuery = "SELECT raceId FROM races where raceName = ?";
-    private final static String findRaceNameQuery = "SELECT raceName FROM races where raceId = ?";    
-    private final static String updateQuery = "UPDATE races SET raceName = ?, raceDateTime = ? WHERE raceId = ?";
-    private final static String deleteQuery = "DELETE FROM races WHERE raceName = ?";
+    private final static String COLLECTION_NAME = "races";
+    private final static String RACEID_FIELD = "id";
+    private final static String RACENAME_FIELD = "raceName";
+    private final static String RACEDATETIME_FIELD = "raceDateTime";
 
     public RaceDaoRealization(JdbcConnection connection) {
         this.connection = connection;
-    }
-    
-    @Override
-    public void insert(Race race) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(insertQuery);
-                statement.setString(1, race.getRaceName());
-                statement.setDate(2, race.getRaceDateTime());
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public Race find(int id) {
-        Race race = new Race();
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(findQuery);
-                statement.setInt(1, id);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    race.setRaceId(rs.getInt(1));
-                    race.setRaceName(rs.getString(2));
-                    race.setRaceDateTime(rs.getDate(3));
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return race;
     }
 
     @Override
     public List<Race> findAll() {
         List<Race> races = new ArrayList<>();
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
         try {
-            try {
-                statement = con.prepareStatement(findAllQuery);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    races.add(new Race(rs.getInt(1), rs.getString(2), rs.getDate(3)));
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBCursor cur = collection.find();
+            while (cur.hasNext()) {
+                races.add(new Race(cur.next().get(RACENAME_FIELD).toString(),
+                        Date.valueOf(LocalDate.parse(cur.curr().get(RACEDATETIME_FIELD).toString()))));
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return races;
     }
-    
+
     @Override
-    public Date findDate(String name){
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        Date date = null;
+    public String findRaceId(String raceName) {
+        String raceId = null;
         try {
-            try {
-                statement = con.prepareStatement(findDate);
-                statement.setString(1, name);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    date = rs.getDate(1);
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBObject query = new BasicDBObject(RACENAME_FIELD, raceName);
+            DBCursor cur = collection.find(query);
+            while (cur.hasNext()) {
+                raceId = cur.next().get(RACEID_FIELD).toString();
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return date;
-    }
-    
-    @Override
-    public int findRaceId(String raceName) {
-        int raceId = 0;
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(findRaceIdQuery);
-                statement.setString(1, raceName);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    raceId = rs.getInt(1);
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return raceId;
     }
-    
+
     @Override
-    public String findRaceName(int raceId){
+    public String findRaceName(String raceId) {
         String raceName = null;
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
         try {
-            try {
-                statement = con.prepareStatement(findRaceNameQuery);
-                statement.setInt(1, raceId);
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()) {
-                    raceName = rs.getString(1);
-                }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            DB db = connection.getConnection();
+            DBCollection collection = db.getCollection(COLLECTION_NAME);
+            DBObject query = new BasicDBObject(RACEID_FIELD, raceId);
+            DBCursor cur = collection.find(query);
+            while (cur.hasNext()) {
+                raceName = cur.next().get(RACENAME_FIELD).toString();
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return raceName;
     }
 
-    @Override
-    public void update(Race race) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(updateQuery);
-                statement.setString(1, race.getRaceName());
-                statement.setDate(2, race.getRaceDateTime());
-                statement.setInt(3, race.getRaceId());
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public void delete(String raceName) {
-        Connection con = connection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            try {
-                statement = con.prepareStatement(deleteQuery);
-                statement.setString(1, raceName);
-                statement.executeUpdate();
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
 }

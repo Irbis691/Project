@@ -27,7 +27,7 @@ public enum CommandEnum {
                 {
                     this.command = new RegistrationCommand();
                 }
-            },   
+            },  
     PLACEBET {
                 {
                     this.command = new PlaceBetCommand();

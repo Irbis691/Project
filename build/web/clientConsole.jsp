@@ -3,6 +3,9 @@
     Created on : 13.05.2015, 11:33:45
     Author     : Пазинич
 --%>
+<%@page import="com.hazelcast.core.HazelcastInstance"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.hazelcast.core.Hazelcast"%>
 <%@page import="raceSystem.entities.Bet"%>
 <%@page import="raceSystem.entities.HorseStatus"%>
 <%@page import="raceSystem.entities.Race"%>
@@ -11,13 +14,6 @@
 <%@page import="raceSystem.dao.factory.DaoFactory"%>
 <%@page import="raceSystem.dao.jdbcConnection.JdbcConnection"%>
 <%@page import="raceSystem.resource.ConfigurationManager"%>
-<%
-    final int CLIENT_TYPE = 3;
-    if (session.getAttribute("type") == null
-            || (Integer) session.getAttribute("type") != CLIENT_TYPE) {
-        response.sendRedirect(ConfigurationManager.getProperty("path.page.backToIndex"));
-    }
-%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -25,6 +21,8 @@
         <%
             JdbcConnection connection = JdbcConnection.getInstance();
             DaoFactory daoFactory = new RealDaoFactory(connection);
+			HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+            Map<Integer, String> customers = hazelcastInstance.getMap("customers");
         %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
@@ -76,7 +74,7 @@
                     <form method="POST" action="./Controller" />
                     <input type = "hidden" name = "command" value = "placeBet" />
                     <input type = "hidden" name = "raceName" value = "<%= request.getParameter("race")%>" />
-                    <input type = "hidden" name = "userId" value = "<%= session.getAttribute("id")%>" />
+                    <input type = "hidden" name = "userId" value = "<%= customers.get(1)%>" />
                     <td valign="top">
                         <select name="horseName">
                             <option selected disabled>Choose horse</option>
@@ -117,7 +115,7 @@
                 <tbody>
                     <%
                                ArrayList<Bet> bets
-                                       = (ArrayList<Bet>) daoFactory.createBetDao().findByUserId((Integer)session.getAttribute("id"));
+                                       = (ArrayList<Bet>) daoFactory.createBetDao().findByUserId(customers.get(1));
                                for (Bet bet : bets) {
                     %>
                     <tr>                      

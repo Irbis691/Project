@@ -4,9 +4,15 @@
  */
 package raceSystem.dao.jdbcConnection;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoOptions;
+import com.mongodb.ReadPreference;
+import com.mongodb.ServerAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +23,7 @@ import java.util.logging.Logger;
 public class JdbcConnection {
 
     private JdbcConnection() {
-        try {
-            connection = createConnection();
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        connection = createConnection();
     }
 
     private static JdbcConnection instance;
@@ -33,23 +35,40 @@ public class JdbcConnection {
         return instance;
     }
 
-    private Connection connection;
+    private DB connection;
 
-    public Connection getConnection() {
-        try {
-            if (!connection.isValid(1)) {
-                connection.close();
-                connection = createConnection();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public DB getConnection() {
+//        try {
+//            if (!connection.isValid(1)) {
+//                connection.close();
+//                connection = createConnection();
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         return connection;
     }
 
-    private Connection createConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb",
-                "root", "1234");
+    private DB createConnection() {
+        MongoOptions options = new MongoOptions();
+        options.setReadPreference(ReadPreference.secondaryPreferred());
+        Mongo mongo = new Mongo(getMongoClients(), options);
+        MongoClient mongoClient = new MongoClient(getMongoClients());
+        DB db = mongoClient.getDB("test");
+        return db;
+    }
+
+    private static List<ServerAddress> getMongoClients() {
+        String url = "localhost:27018,localhost:27019,localhost:27020";
+        ArrayList<ServerAddress> addr = new ArrayList<>();
+        try {
+            for (String s : url.split(",")) {
+                addr.add(new ServerAddress(s));
+            }
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return addr;
     }
 
 }

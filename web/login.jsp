@@ -30,7 +30,7 @@ and open the template in the editor.
             <p class="label">Login:</p>
             <input type="text" name="login" value="" />
             <p class="label">Password:</p>
-            <input type="text" name="password" value="" />
+            <input type="password" name="password" value="" />
            
             <strong>${errorLoginMessage}</strong>
             <br/>

@@ -30,7 +30,7 @@ and open the template in the editor.
             <p class="label">Login:</p>
             <input type="text" name="login" />
             <p class="label">Password:</p>
-            <input type="text" name="password" />
+            <input type="password" name="password" />
             <br/>
             <strong>${loginNotUniqMessage}</strong>
             <br/>

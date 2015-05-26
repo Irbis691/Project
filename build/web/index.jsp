@@ -11,7 +11,7 @@
 <html>
     <head>
         <%
-			HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+            HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
             Map<Integer, String> customers = hazelcastInstance.getMap("customers");
             if (customers.get(1) != null) {
                 RequestDispatcher dispatcher
@@ -66,7 +66,7 @@
                     }
                 %>
             </tbody>
-        </table></center>>
+        </table></center>
         </div>
             
          </div>

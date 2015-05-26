@@ -27,9 +27,6 @@ public class LoginCommand implements ActionCommand {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
         Map<Integer, String> customers = hazelcastInstance.getMap("customers");
-//        if(customers.get(1) != null) {
-//            return page;
-//        }
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String pass = request.getParameter(PARAM_NAME_PASSWORD);
         if (LoginLogic.checkLogin(login)) {

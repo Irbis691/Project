@@ -9,24 +9,25 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
         <title>Successful registration page</title>
     </head>
     <body>
-    <center>
-        <h1>Registration successful</h1>
-        <hr>
-        <!--<table cellspacing="20" bgcolor = #fc0>-->
-        <table>            
-            <tbody>
-                <tr>
-                    <td><a href="index.jsp">Index</a></td>
-                    <td><a href="registration.jsp">Registration</a></td>
-                    <td><a href="login.jsp">Login</a></td>
-                </tr>
-            </tbody>
-        </table>
-        <hr>
-        <h3>Welcome, ${user}</h3>
-    </center>
+    <div id="wrapper">
+        <div id="header"> 
+                <h1>Horse Racing</h1>
+                <p class="description">Welcome to the best totalizator for horse racing!</p>
+                <a href="index.jsp"><img src="logo1.png" alt="horse racing" width="250"></a>
+            </div> 
+            <ul id="nav">
+            <li><a href="index.jsp">Index</a></li>             
+            <li><a href="registration.jsp">Registration</a></li>
+            <li> <a href="login.jsp">Login</a></li>
+            </ul>
+        <div id="fullpage">
+        <h2>Registration successfully done.</h2>
+        <h2>Welcome, ${user}!</h2>
+        </div>
+    </div>>
 </body>
 </html>

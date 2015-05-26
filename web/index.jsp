@@ -12,28 +12,32 @@
         %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
-        <title>Welcome!</title>
+        <title>Horse racing</title>
     </head>
-    <body>
-    <center>
-        <h1>Welcome to best totalizator for horse racings!</h1>
-        <hr>
-        <!--<table cellspacing="20" bgcolor = #fc0>-->
-        <table>
-            <tbody>
-                <tr>
-                    <td><a href="index.jsp">Index</a></td>
-                    <td><a href="registration.jsp">Registration</a></td>
-                    <td><a href="login.jsp">Login</a></td>
-                </tr>
-            </tbody>
-        </table>
-        <hr>
-        <table border="1">
-            <tbody>
-                <tr>
-                    <th colspan="2">Current races</th>
-                </tr>
+    <body>     
+        <div id="wrapper">
+            <div id="header"> 
+                <h1>Horse Racing</h1>
+                <p class="description">Welcome to the best totalizator for horse racing!</p>
+                <a href="index.jsp"><img src="logo1.png" alt="horse racing" width="250"></a>
+            </div> 
+            <ul id="nav">
+            <li><a href="index.jsp">Index</a></li>
+            <li><a href="registration.jsp">Registration</a></li>
+            <li> <a href="login.jsp">Login</a></li>
+            </ul>
+            <div id="sidebar">
+                <h2>Latest News</h2>
+                <p class="news">
+                    The winner of the last race is Lesly!
+                    <img src="cute_horse.png" width="200">
+                </p>
+            </div>
+        <div id="content">
+            <h2>Current races</h2>
+            <center>
+        <table class="races">
+            <tbody>                
                 <tr>
                     <th>Name</th>
                     <th>Date</th>
@@ -51,7 +55,9 @@
                     }
                 %>
             </tbody>
-        </table>
-    </center>
+        </table></center>>
+        </div>
+            
+         </div>
 </body>
 </html>

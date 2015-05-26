@@ -11,26 +11,26 @@ and open the template in the editor.
         <title>Registration page</title>
     </head>
     <body>
-    <center>
+    <div id="wrapper">
+        <div id="header"> 
+                <h1>Horse Racing</h1>
+                <p class="description">Welcome to the best totalizator for horse racing!</p>
+                <a href="index.jsp"><img src="logo1.png" alt="horse racing" width="250"></a>
+            </div> 
+            <ul id="nav">
+            <li><a href="index.jsp">Index</a></li>
+            <li><a href="registration.jsp">Registration</a></li>
+            <li> <a href="login.jsp">Login</a></li>
+            </ul>
+        <div id="fullpage">
         <h1>Registration page</h1>
-        <hr>
-        <table>
-            <tbody>
-                <tr>
-                    <td><a href="index.jsp">Index</a></td>
-                    <td><a href="registration.jsp">Registration</a></td>
-                    <td><a href="login.jsp">Login</a></td>
-                </tr>
-            </tbody>
-        </table>
-        <hr>
         <form method="POST" action="./Controller">
             <input type = "hidden" name = "command" value = "Registration" />
             <input type = "hidden" name = "type" value = "3" />
-            Login:<br/>
-            <input type="text" name="login"/>
-            <br/>Password:<br/>
-            <input type="text" name="password"/>
+            <p class="label">Login:</p>
+            <input type="text" name="login" />
+            <p class="label">Password:</p>
+            <input type="text" name="password" />
             <br/>
             <strong>${loginNotUniqMessage}</strong>
             <br/>
@@ -38,9 +38,9 @@ and open the template in the editor.
             <br/>
             <strong>${nullPage}</strong>
             <br/>
-            <input type="submit" value="Register">
+            <input type="submit" value="Register" class="button">
         </form>
-        <hr>
-    </center>
+        </div>
+    </div>
 </body>
 </html>

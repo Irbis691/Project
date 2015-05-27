@@ -5,6 +5,7 @@
  */
 package raceSystem.logic;
 
+import com.mongodb.WriteResult;
 import raceSystem.dao.factory.DaoFactory;
 import raceSystem.dao.factory.RealDaoFactory;
 import raceSystem.dao.jdbcConnection.JdbcConnection;
@@ -15,10 +16,11 @@ import raceSystem.dao.jdbcConnection.JdbcConnection;
  */
 public class DeleteBetLogic {
 
-    public static void deleteBetSize(long betId) {
+    public static WriteResult deleteBetSize(long betId) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
-        daoFactory.createBetDao().delete(betId);
+        WriteResult result = daoFactory.createBetDao().delete(betId);
+        return result;
     }
 
 }

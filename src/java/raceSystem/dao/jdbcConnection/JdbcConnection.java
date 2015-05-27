@@ -6,10 +6,10 @@ package raceSystem.dao.jdbcConnection;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
+import com.mongodb.WriteConcern;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +38,6 @@ public class JdbcConnection {
     private DB connection;
 
     public DB getConnection() {
-//        try {
-//            if (!connection.isValid(1)) {
-//                connection.close();
-//                connection = createConnection();
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(JdbcConnection.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         return connection;
     }
 
@@ -53,8 +45,9 @@ public class JdbcConnection {
         MongoOptions options = new MongoOptions();
         options.setReadPreference(ReadPreference.secondaryPreferred());
         Mongo mongo = new Mongo(getMongoClients(), options);
-        MongoClient mongoClient = new MongoClient(getMongoClients());
-        DB db = mongoClient.getDB("test");
+        WriteConcern concern = new WriteConcern(2, 5000);
+        mongo.setWriteConcern(concern);        
+        DB db = mongo.getDB("test");
         return db;
     }
 

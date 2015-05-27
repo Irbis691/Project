@@ -25,7 +25,7 @@ public class LoginCommand implements ActionCommand {
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
-        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+        HazelcastInstance hazelcastInstance = Hazelcast.getHazelcastInstanceByName("hazelcastInstance");
         Map<Integer, String> customers = hazelcastInstance.getMap("customers");
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String pass = request.getParameter(PARAM_NAME_PASSWORD);

@@ -5,6 +5,7 @@
  */
 package raceSystem.dao.interfaces;
 
+import com.mongodb.WriteResult;
 import java.util.List;
 import raceSystem.entities.Bet;
 
@@ -14,13 +15,13 @@ import raceSystem.entities.Bet;
  */
 public interface BetDao {
 
-    void insert(Bet user);
+    WriteResult insert(Bet user);
 
     List<Bet> findAll();
     
     List<Bet> findByUserId(String userId);
 
-    void updateBetSize(long betId, double betSize);
+    WriteResult updateBetSize(long betId, double betSize);
 
-    void delete(long betId);
+    WriteResult delete(long betId);
 }

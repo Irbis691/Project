@@ -5,9 +5,11 @@
  */
 package raceSystem.command;
 
+import com.mongodb.WriteResult;
 import javax.servlet.http.HttpServletRequest;
 import raceSystem.logic.UpdateBetSizeLogic;
 import raceSystem.resource.ConfigurationManager;
+import raceSystem.resource.MessageManager;
 
 /**
  *
@@ -23,7 +25,11 @@ public class UpdateBetSizeCommand implements ActionCommand {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
         long betId = Long.parseLong(request.getParameter(PARAM_NAME_BETID));
         double betSize = Double.parseDouble(request.getParameter(PARAM_NAME_BETSIZE));
-        UpdateBetSizeLogic.updateBetSize(betId, betSize);
+        WriteResult result = UpdateBetSizeLogic.updateBetSize(betId, betSize);
+        if (result == null) {
+            request.setAttribute("errorInsertMessage",
+                        MessageManager.getProperty("message.insertError"));
+        }
         return page;
     }
 

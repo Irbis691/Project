@@ -10,6 +10,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 import java.util.ArrayList;
 import java.util.List;
 import raceSystem.dao.interfaces.BetDao;
@@ -35,7 +37,8 @@ public class BetDaoRealization implements BetDao {
     }
 
     @Override
-    public void insert(Bet bet) {
+    public WriteResult insert(Bet bet) {
+        WriteResult result = null;
         try {
             DB db = connection.getConnection();
             DBCollection collection = db.getCollection(COLLECTION_NAME);
@@ -44,10 +47,11 @@ public class BetDaoRealization implements BetDao {
                     .append(RACEID_FIELD, bet.getRaceId())
                     .append(HORSENAME_FIELD, bet.getHorseName())
                     .append(BETSIZE_FIELD, bet.getBetSize());
-            collection.insert(person);
+            result = collection.insert(person);
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        return result;
     }
 
     @Override
@@ -61,11 +65,12 @@ public class BetDaoRealization implements BetDao {
                 bets.add(new Bet(cur.next().get(USERID_FIELD).toString(),
                         cur.curr().get(RACEID_FIELD).toString(),
                         cur.curr().get(HORSENAME_FIELD).toString(),
-                        (Double) cur.curr().get(HORSENAME_FIELD)));
+                        (Double) cur.curr().get(HORSENAME_FIELD)));                
             }
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        
         return bets;
     }
 
@@ -91,21 +96,24 @@ public class BetDaoRealization implements BetDao {
     }
 
     @Override
-    public void updateBetSize(long betId, double betSize) {
+    public WriteResult updateBetSize(long betId, double betSize) {
+        WriteResult result = null;
         try {
             DB db = connection.getConnection();
             DBCollection collection = db.getCollection(COLLECTION_NAME);
             BasicDBObject updateDocument = new BasicDBObject();
             updateDocument.append("$set", new BasicDBObject().append(BETSIZE_FIELD, betSize));
             BasicDBObject searchQuery = new BasicDBObject().append(BETID_FIELD, betId);
-            collection.update(searchQuery, updateDocument);
+            result = collection.update(searchQuery, updateDocument);
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        return result;
     }
 
     @Override
-    public void delete(long betId) {
+    public WriteResult delete(long betId) {
+        WriteResult result = null;
         try {
             DB db = connection.getConnection();
             DBCollection collection = db.getCollection(COLLECTION_NAME);
@@ -113,10 +121,11 @@ public class BetDaoRealization implements BetDao {
             DBCursor cur = collection.find(query);
             while (cur.hasNext()) {
                 DBObject forDelete = cur.next();
-                collection.remove(forDelete);
+                result = collection.remove(forDelete);
             }
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-    }
+        return result;
+    }   
 }

@@ -5,6 +5,7 @@
  */
 package raceSystem.logic;
 
+import com.mongodb.WriteResult;
 import raceSystem.dao.factory.DaoFactory;
 import raceSystem.dao.factory.RealDaoFactory;
 import raceSystem.dao.jdbcConnection.JdbcConnection;
@@ -15,10 +16,11 @@ import raceSystem.dao.jdbcConnection.JdbcConnection;
  */
 public class UpdateBetSizeLogic {
 
-    public static void updateBetSize(long betId, double betSize) {
+    public static WriteResult updateBetSize(long betId, double betSize) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
-        daoFactory.createBetDao().updateBetSize(betId, betSize);
+        WriteResult result = daoFactory.createBetDao().updateBetSize(betId, betSize);
+        return result;
     }
     
 }

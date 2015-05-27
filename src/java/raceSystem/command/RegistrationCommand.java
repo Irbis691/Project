@@ -5,6 +5,7 @@
  */
 package raceSystem.command;
 
+import com.mongodb.WriteResult;
 import javax.servlet.http.HttpServletRequest;
 import raceSystem.logic.RegistrationLogic;
 import raceSystem.resource.ConfigurationManager;
@@ -21,17 +22,21 @@ public class RegistrationCommand implements ActionCommand {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page = ConfigurationManager.getProperty("path.page.registration");
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String pass = request.getParameter(PARAM_NAME_PASSWORD);
-        if (RegistrationLogic.checkLoginUniq(login)) {
-            RegistrationLogic.regNewUser(System.currentTimeMillis(), login, pass);
-            request.setAttribute("user", login);
-            page = ConfigurationManager.getProperty("path.page.successRegPage");
-        } else {
+        if (!RegistrationLogic.checkLoginUniq(login)) {
             request.setAttribute("loginNotUniqMessage",
                     MessageManager.getProperty("message.loginNotUniqMessage"));
-            page = ConfigurationManager.getProperty("path.page.registration");
+        } else {
+            WriteResult result = RegistrationLogic.regNewUser(System.currentTimeMillis(), login, pass);
+            if (result == null) {
+                request.setAttribute("errorInsertMessage",
+                        MessageManager.getProperty("message.insertError"));
+            } else {
+                request.setAttribute("user", login);
+                page = ConfigurationManager.getProperty("path.page.successRegPage");
+            }
         }
         return page;
     }

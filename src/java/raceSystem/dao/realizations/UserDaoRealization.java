@@ -10,6 +10,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 import java.util.ArrayList;
 import java.util.List;
 import raceSystem.dao.interfaces.UserDao;
@@ -33,17 +34,19 @@ public class UserDaoRealization implements UserDao {
     }
 
     @Override
-    public void insert(User user) {
+    public WriteResult insert(User user) {
+        WriteResult result = null;
         try {
             DB db = connection.getConnection();
             DBCollection collection = db.getCollection(COLLECTION_NAME);
             DBObject person = new BasicDBObject(USERID_FIELD, user.getUserId())
                     .append(USERLOGIN_FIELD, user.getLogin())
                     .append(USERPASSWORDHASH_FIELD, user.getPasswordHash());
-            collection.insert(person);
+            result = collection.insert(person);
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        return result;
     }
 
     @Override

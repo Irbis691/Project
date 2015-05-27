@@ -5,6 +5,7 @@
  */
 package raceSystem.logic;
 
+import com.mongodb.WriteResult;
 import raceSystem.dao.factory.DaoFactory;
 import raceSystem.dao.factory.RealDaoFactory;
 import raceSystem.dao.jdbcConnection.JdbcConnection;
@@ -16,12 +17,13 @@ import raceSystem.entities.Bet;
  */
 public class PlaceBetLogic {
 
-    public static void palceBet(long betId, String userId, String raceName, String horseName, double betSize) {
+    public static WriteResult palceBet(long betId, String userId, String raceName, String horseName, double betSize) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
         String raceId = daoFactory.createRaceDao().findRaceId(raceName);
         Bet bet = new Bet(betId, userId, raceId, horseName, betSize);
-        daoFactory.createBetDao().insert(bet);
+        WriteResult result = daoFactory.createBetDao().insert(bet);
+        return result;
     }
     
 }

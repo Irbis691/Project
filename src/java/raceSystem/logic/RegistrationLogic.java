@@ -5,6 +5,7 @@
  */
 package raceSystem.logic;
 
+import com.mongodb.WriteResult;
 import java.util.ArrayList;
 import raceSystem.dao.factory.DaoFactory;
 import raceSystem.dao.factory.RealDaoFactory;
@@ -29,10 +30,11 @@ public class RegistrationLogic {
         return true;
     }
     
-    public static void regNewUser(long id, String enterLogin, String enterPass) {
+    public static WriteResult regNewUser(long id, String enterLogin, String enterPass) {
         JdbcConnection connection = JdbcConnection.getInstance();
         DaoFactory daoFactory = new RealDaoFactory(connection);
         User user = new User(id, enterLogin, enterPass.hashCode());
-        daoFactory.createUserDao().insert(user);
+        WriteResult result = daoFactory.createUserDao().insert(user);
+        return result;
     }
 }

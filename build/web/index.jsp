@@ -1,3 +1,4 @@
+<%@page import="com.hazelcast.config.Config"%>
 <%@page import="raceSystem.resource.ConfigurationManager"%>
 <%@page import="com.hazelcast.core.HazelcastInstance"%>
 <%@page import="java.util.Map"%>
@@ -11,11 +12,14 @@
 <html>
     <head>
         <%
-            HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+            Config con = new Config();
+            con.setInstanceName("hazelcastInstance");
+            HazelcastInstance hazelcastInstance = Hazelcast.getOrCreateHazelcastInstance(con);
             Map<Integer, String> customers = hazelcastInstance.getMap("customers");
             if (customers.get(1) != null) {
                 RequestDispatcher dispatcher
-                        = getServletContext().getRequestDispatcher(ConfigurationManager.getProperty("path.page.clientConsole"));
+                        = getServletContext().getRequestDispatcher(ConfigurationManager.
+                                getProperty("path.page.clientConsole"));
                 dispatcher.forward(request, response);
             }
             JdbcConnection connection = JdbcConnection.getInstance();

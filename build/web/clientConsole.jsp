@@ -18,11 +18,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%
+        <%            
+            HazelcastInstance hazelcastInstance = Hazelcast.getHazelcastInstanceByName("hazelcastInstance");
+            Map<Integer, String> customers = hazelcastInstance.getMap("customers");
+            if (customers.get(1) == null) {
+                RequestDispatcher dispatcher
+                        = getServletContext().getRequestDispatcher(ConfigurationManager.
+                                getProperty("path.page.index"));
+                dispatcher.forward(request, response);
+            }
             JdbcConnection connection = JdbcConnection.getInstance();
             DaoFactory daoFactory = new RealDaoFactory(connection);
-			HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
-            Map<Integer, String> customers = hazelcastInstance.getMap("customers");
         %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="style.css">
@@ -30,7 +36,7 @@
     </head>
     <body>
    <div id="wrapper">
-        <div id="header"> 
+        <div id="header">
                 <h1>Horse Racing</h1>
                 <p class="description">Welcome to the best totalizator for horse racing!</p>
                 <a href="index.jsp"><img src="logo1.png" alt="horse racing" width="250"></a>
@@ -102,7 +108,9 @@
                 </tr>
             </tbody>
         </table>
-                        
+        <br/>
+        <p class="message">${errorInsertMessage}</p>
+        <br/>                
         <h2>My bets</h2>
         <table class="races">
             <thead>
@@ -162,6 +170,10 @@
                     </tr>
                 </tbody>
         </table>
+        <form method="POST" action="./Controller" />
+        <input type = "hidden" name = "command" value = "Logout" />
+        <input type="submit" value="Logout" class="small_button"/>
+        </form> 
         </center>
         </div>
    </div>

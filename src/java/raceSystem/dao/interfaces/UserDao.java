@@ -5,6 +5,7 @@
  */
 package raceSystem.dao.interfaces;
 
+import com.mongodb.WriteResult;
 import java.util.List;
 import raceSystem.entities.User;
 
@@ -14,7 +15,7 @@ import raceSystem.entities.User;
  */
 public interface UserDao {
 
-    void insert(User user);
+    WriteResult insert(User user);
 
     List<String> findLogins();
 

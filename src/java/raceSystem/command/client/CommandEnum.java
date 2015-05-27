@@ -8,6 +8,7 @@ package raceSystem.command.client;
 import raceSystem.command.ActionCommand;
 import raceSystem.command.DeleteBetCommand;
 import raceSystem.command.LoginCommand;
+import raceSystem.command.LogoutCommand;
 import raceSystem.command.PlaceBetCommand;
 import raceSystem.command.RegistrationCommand;
 import raceSystem.command.UpdateBetSizeCommand;
@@ -41,6 +42,11 @@ public enum CommandEnum {
     DELETEBET {
                 {
                     this.command = new DeleteBetCommand();
+                }
+            },
+    LOGOUT {
+                {
+                    this.command = new LogoutCommand();
                 }
             };
 

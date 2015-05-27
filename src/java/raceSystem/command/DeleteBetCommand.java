@@ -5,9 +5,11 @@
  */
 package raceSystem.command;
 
+import com.mongodb.WriteResult;
 import javax.servlet.http.HttpServletRequest;
 import raceSystem.logic.DeleteBetLogic;
 import raceSystem.resource.ConfigurationManager;
+import raceSystem.resource.MessageManager;
 
 /**
  *
@@ -20,8 +22,12 @@ public class DeleteBetCommand implements ActionCommand {
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.getProperty("path.page.clientConsole");
-        long betId = Long.parseLong(request.getParameter(PARAM_NAME_BETID));
-        DeleteBetLogic.deleteBetSize(betId);
+        long betId = Long.parseLong(request.getParameter(PARAM_NAME_BETID));        
+        WriteResult result = DeleteBetLogic.deleteBetSize(betId);
+        if (result == null) {
+            request.setAttribute("errorInsertMessage",
+                        MessageManager.getProperty("message.insertError"));
+        }
         return page;
     }
     

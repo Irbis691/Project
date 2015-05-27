@@ -31,13 +31,9 @@ and open the template in the editor.
             <input type="text" name="login" />
             <p class="label">Password:</p>
             <input type="password" name="password" />
-            <br/>
-            <strong>${loginNotUniqMessage}</strong>
-            <br/>
-            <strong>${wrongAction}</strong>
-            <br/>
-            <strong>${nullPage}</strong>
-            <br/>
+            <p class="message">${loginNotUniqMessage}</p>
+            <p class="message">${wrongAction}</p>
+            <p class="message">${nullPage}</p>
             <input type="submit" value="Register" class="button">
         </form>
         </div>

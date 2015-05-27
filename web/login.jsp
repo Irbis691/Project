@@ -30,16 +30,11 @@ and open the template in the editor.
             <p class="label">Login:</p>
             <input type="text" name="login" value="" />
             <p class="label">Password:</p>
-            <input type="password" name="password" value="" />
-           
-            <strong>${errorLoginMessage}</strong>
-            <br/>
-            <strong>${errorPassMessage}</strong>
-            <br/>
-            <strong>${wrongAction}</strong>
-            <br/>
-            <strong>${nullPage}</strong>
-            <br/>
+            <input type="password" name="password" value="" />            
+            <p class="message">${errorLoginMessage}</p>            
+             <p class="message">${errorPassMessage}</p>            
+             <p class="message">${wrongAction}</p>            
+             <p class="lmessage">${nullPage}</p>           
             <input type="submit" value="Login" class="button">
         </form>
         </div>
